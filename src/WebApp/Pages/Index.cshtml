@@ -1,0 +1,25 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@foreach (var solver in SolverRegistry.All)
+{
+    <div class="solver-card">
+        <h3>@solver.Metadata.DisplayName</h3>
+        <p>@solver.Metadata.Description</p>
+        @foreach (var param in solver.Metadata.Parameters)
+        {
+
+            <p>@param.Key</p>
+            <p>@param.Value.Value</p>
+            <p>@param.Value.Range</p>
+        }
+    </div>
+}
