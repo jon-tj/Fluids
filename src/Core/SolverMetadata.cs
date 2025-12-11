@@ -2,11 +2,11 @@ namespace FluidSim.Core;
 
 public class SolverMetadata
 {
-    public string DisplayName;
-    public string Description;
-    public Dictionary<string, DisplayParameter> Parameters;
-    public SimDimensionality Dimensionality;
-    public SimDomainNature DomainNature;
+    public string DisplayName { get; set; }
+    public string Description { get; set; }
+    public Dictionary<string, DisplayParameter> Parameters { get; set; }
+    public SimDimensionality Dimensionality { get; set; }
+    public SimDomainNature DomainNature { get; set; }
 
     public SolverMetadata(
         string displayName,

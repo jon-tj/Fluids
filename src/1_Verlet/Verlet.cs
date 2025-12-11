@@ -5,7 +5,7 @@ namespace FluidSim.Solvers.Verlet;
 
 public class StableFluidsSolver : IFluidSolver
 {
-    public string Id => "StableFluids";
+    public string Id => "Verlet";
 
     public SolverMetadata Metadata =>
         new(
