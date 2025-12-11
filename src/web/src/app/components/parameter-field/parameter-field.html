@@ -1,0 +1,22 @@
+<aside>
+  <p>{{ title }}</p>
+</aside>
+
+<aside>
+  @if(parameter.domain == 1){
+  <input
+    class="slider"
+    #slider
+    type="range"
+    [min]="parameter.range.min"
+    [max]="parameter.range.max"
+    [value]="parameter.value"
+    step="0.01"
+    (input)="changeValue($event)"
+  />
+  }
+</aside>
+
+<aside>
+  <input #slider type="number" [value]="parameter.value" (input)="changeValue($event)" />
+</aside>

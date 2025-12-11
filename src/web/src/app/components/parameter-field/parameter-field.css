@@ -1,0 +1,19 @@
+:host {
+  display: grid;
+  grid-template-columns: 0.35fr 0.45fr 0.2fr;
+  max-width: 20rem;
+}
+
+input {
+  width: 100%;
+  height: 1rem;
+  margin: auto;
+}
+input.slider {
+  margin-right: 1rem;
+}
+
+aside {
+  display: flex;
+  justify-items: center;
+}

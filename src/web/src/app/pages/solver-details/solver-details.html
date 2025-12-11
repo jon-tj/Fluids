@@ -1,16 +1,7 @@
 @if(solver()){
 <h1>{{ solver()!.displayName }}</h1>
 <p>{{ solver()!.description }}</p>
-<table>
-  <thead>
-    <td>Parameter</td>
-    <td>Value</td>
-  </thead>
-  @for(param of parameters(); track param.key){
-  <tr>
-    <td>{{ param.key }}</td>
-    <td>{{ param.data.value }}</td>
-  </tr>
-  }
-</table>
-}
+
+@for(param of parameters(); track param.key){
+<app-parameter-field [parameter]="param.data" [title]="param.key"></app-parameter-field>
+} }
