@@ -72,6 +72,13 @@ export class SolverSimulation implements AfterViewInit, OnDestroy {
         const pz = view.getFloat32(offset, true);
         offset += 4;
 
+        const px1 = view.getFloat32(offset, true);
+        offset += 4;
+        const py1 = view.getFloat32(offset, true);
+        offset += 4;
+        const pz1 = view.getFloat32(offset, true);
+        offset += 4;
+
         const vx = view.getFloat32(offset, true);
         offset += 4;
         const vy = view.getFloat32(offset, true);

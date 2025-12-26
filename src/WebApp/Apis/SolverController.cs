@@ -32,7 +32,7 @@ public class SolverController : ControllerBase
         FluidState fs;
         if (string.IsNullOrEmpty(request.State))
         {
-            fs = FluidState.UniformRandom(1000, 1.0f, 10, 10, 10);
+            fs = FluidState.UniformRandom(300, 1.0f, 10, 10, 0);
         }
         else
         {

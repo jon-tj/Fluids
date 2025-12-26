@@ -21,10 +21,13 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
             float px = br.ReadSingle();
             float py = br.ReadSingle();
             float pz = br.ReadSingle();
+            float px1 = br.ReadSingle();
+            float py1 = br.ReadSingle();
+            float pz1 = br.ReadSingle();
             float vx = br.ReadSingle();
             float vy = br.ReadSingle();
             float vz = br.ReadSingle();
-            particles[i] = new Particle(mass, new Vector3(px, py, pz), new Vector3(vx, vy, vz));
+            particles[i] = new Particle(mass, new Vector3(px, py, pz), new Vector3(px1, py1, pz1), new Vector3(vx, vy, vz));
         }
         return new FluidState(particles, width, height, depth);
     }
@@ -43,6 +46,9 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
             bw.Write(p.Position.x);
             bw.Write(p.Position.y);
             bw.Write(p.Position.z);
+            bw.Write(p.PreviousPosition.x);
+            bw.Write(p.PreviousPosition.y);
+            bw.Write(p.PreviousPosition.z);
             bw.Write(p.Velocity.x);
             bw.Write(p.Velocity.y);
             bw.Write(p.Velocity.z);
@@ -56,20 +62,22 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
         Random rand = new Random();
         for (int i = 0; i < numParticles; i++)
         {
-            particles[i] = new Particle(mass, new Vector3(
-                (float)rand.NextDouble() * width,
-                (float)rand.NextDouble() * height,
-                (float)rand.NextDouble() * depth),
-                Vector3.Zero);
+            Vector3 pos0 = new Vector3(
+                (float)(rand.NextDouble() * width),
+                (float)(rand.NextDouble() * height),
+                (float)(rand.NextDouble() * depth)
+            );
+            particles[i] = new Particle(mass, pos0, pos0, Vector3.Zero);
         }
         return new FluidState(particles, width, height, depth);
     }
 }
 
-public class Particle(float Mass, Vector3 Position, Vector3 Velocity)
+public class Particle(float Mass, Vector3 Position, Vector3 PreviousPosition, Vector3 Velocity)
 {
     public float Mass { get; set; } = Mass;
     public Vector3 Position { get; set; } = Position;
+    public Vector3 PreviousPosition { get; set; } = PreviousPosition;
     public Vector3 Velocity { get; set; } = Velocity;
 }
 
@@ -112,6 +120,10 @@ public class Vector3
     {
         return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
     }
+    public static Vector3 operator -(Vector3 a, Vector3 b)
+    {
+        return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+    }
 
     public static Vector3 operator *(Vector3 a, float b)
     {
@@ -120,6 +132,11 @@ public class Vector3
     public static Vector3 operator *(Vector3 a, Vector3 b)
     {
         return a.Dot(b);
+    }
+
+    public static Vector3 operator /(Vector3 a, float b)
+    {
+        return new Vector3(a.x / b, a.y / b, a.z / b);
     }
 
     public static Vector3 Zero => new Vector3(0, 0, 0);
