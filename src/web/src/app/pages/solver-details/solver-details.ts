@@ -2,10 +2,11 @@ import { Component, computed, inject } from '@angular/core';
 import { Solvers } from '../../services/solvers';
 import { ActivatedRoute } from '@angular/router';
 import { ParameterField } from '../../components/parameter-field/parameter-field';
+import { SolverSimulation } from '../../components/solver-simulation/solver-simulation';
 
 @Component({
   selector: 'app-solver-details',
-  imports: [ParameterField],
+  imports: [ParameterField, SolverSimulation],
   templateUrl: './solver-details.html',
   styleUrl: './solver-details.css',
 })

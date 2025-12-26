@@ -17,21 +17,29 @@ public class StableFluidsSolver : IFluidSolver
                 ["Time Step"] = new DisplayParameter(0.05f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
                 ["Radius"] = new DisplayParameter(0.05f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
                 ["Chunk Size"] = new DisplayParameter(0.05f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
-                ["Initial Skew"] = new DisplayParameter(0.05f, new Interval(0, 1), ParameterDomain.Decimal),
+                // ["Initial Skew"] = new DisplayParameter(0.05f, new Interval(0, 1), ParameterDomain.Decimal),
             }
         );
 
-    public FluidState Initialize()
-    {
-        // allocate grid
-        int w = 128;
-        int h = 128;
-        return new FluidState(new float[w * h], w, h);
-    }
-
-    public FluidState Step(FluidState state, float dt)
+    public FluidState Step(FluidState state)
     {
         // apply advection, diffusion, projection, etc
+        for (int i = 0; i < (int)Metadata.Parameters["Substeps"].Value; i++)
+        {
+            // perform a single substep
+            float dt = Metadata.Parameters["Time Step"].Value;
+            float radius = Metadata.Parameters["Radius"].Value;
+            float chunkSize = Metadata.Parameters["Chunk Size"].Value;
+            Vector3 acceleration = Vector3.Gravity;
+            float dt2 = dt * dt;
+            for (int j = 0; j < state.Particles.Length; j++)
+            {
+                Particle p = state.Particles[j];
+                // verlet integration
+                p.Position = p.Position + p.Velocity * dt + acceleration * dt2;
+                state.Particles[j] = p;
+            }
+        }
         return state; // updated
     }
 }

@@ -4,4 +4,7 @@
 
 @for(param of parameters(); track param.key){
 <app-parameter-field [parameter]="param.data" [title]="param.key"></app-parameter-field>
-} }
+}
+
+<app-solver-simulation [solver]="solver()!.displayName"></app-solver-simulation>
+}

@@ -18,6 +18,36 @@ public class SolverController : ControllerBase
     [HttpGet("{id}")]
     public SolverMetadata? Get(string id)
     {
-        return SolverRegistry.All.Where(s => s.Id == id).FirstOrDefault()?.Metadata;
+        return GetSolverById(id)?.Metadata;
+    }
+
+    // POST api/solver/{id}/update
+    [HttpPost("{id}/update")]
+    public string Update(string id, [FromBody] UpdateRequestBody request)
+    {
+        var solver = GetSolverById(id);
+        if (solver is null)
+            return "";
+
+        FluidState fs;
+        if (string.IsNullOrEmpty(request.State))
+        {
+            fs = FluidState.UniformRandom(1000, 1.0f, 10, 10, 10);
+        }
+        else
+        {
+            var bytes = Convert.FromBase64String(request.State ?? "");
+            fs = FluidState.Deserialize(bytes);
+        }
+
+        FluidState next = solver.Step(fs);
+        return Convert.ToBase64String(next.Serialize());
+    }
+
+    private IFluidSolver? GetSolverById(string id)
+    {
+        return SolverRegistry.All.FirstOrDefault(s => s.Id == id);
     }
 }
+
+public record UpdateRequestBody(string State);

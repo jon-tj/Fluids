@@ -12,8 +12,18 @@ export class Solvers {
   }
 
   private loadMetadata() {
-    fetch('http://localhost:5140/api/solver')
+    fetch('api/solver')
       .then((res) => res.json())
       .then((data) => this.metadata.set(data));
+  }
+
+  requestUpdate(solver: string, state: string): Promise<string> {
+    return fetch(`api/solver/${solver}/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ state }),
+    })
+      .then((res) => res.text())
+      .then((data) => data);
   }
 }
