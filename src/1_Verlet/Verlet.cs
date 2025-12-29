@@ -17,12 +17,20 @@ public class VerletSolver : IFluidSolver
             parameters: new()
             {
                 ["Substeps"] = new DisplayParameter(5, new Interval(1, 20), ParameterDomain.Integer),
-                ["Time Step"] = new DisplayParameter(0.03f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
+                ["Time Step"] = new DisplayParameter(0.033f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
                 ["Radius"] = new DisplayParameter(0.2f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
                 ["Chunk Size"] = new DisplayParameter(0.4f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
+                ["Gravity"] = new DisplayParameter(9.81f, new Interval(0, 30), ParameterDomain.Decimal, Units.MetersPerSecond2),
+                ["Tunnel Speed"] = new DisplayParameter(0.0f, new Interval(-10f, 10f), ParameterDomain.Decimal, Units.MetersPerSecond),
                 // ["Initial Skew"] = new DisplayParameter(0.05f, new Interval(0, 1), ParameterDomain.Decimal),
             }
         );
+
+    private bool isLoopingX
+    {
+        get => md.Parameters["Tunnel Speed"].Value != 0.0f;
+    }
+
     public FluidState Step(FluidState state)
     {
         int substeps = (int)md.Parameters["Substeps"].Value;
@@ -30,7 +38,7 @@ public class VerletSolver : IFluidSolver
         dt /= substeps;
         float radius = md.Parameters["Radius"].Value;
         float chunkSize = md.Parameters["Chunk Size"].Value;
-        Vector3 acceleration = Vector3.Gravity;
+        Vector3 acceleration = Vector3.Down * md.Parameters["Gravity"].Value;
 
         for (int step = 0; step < substeps; step++)
         {
@@ -41,6 +49,8 @@ public class VerletSolver : IFluidSolver
                 Vector3 currentPos = p.Position;
                 p.Position = currentPos + (currentPos - p.PreviousPosition) + acceleration * dt * dt;
                 p.PreviousPosition = currentPos;
+                p.Position.x += md.Parameters["Tunnel Speed"].Value * dt;
+                p.PreviousPosition.x += md.Parameters["Tunnel Speed"].Value * dt;
                 state.Particles[j] = p;
             }
 
@@ -96,22 +106,34 @@ public class VerletSolver : IFluidSolver
                 if (p.Position.y < radius)
                 {
                     p.Position.y = radius;
-                    state.Particles[j] = p;
                 }
-                if (p.Position.y > state.Height * 3) // Extra height to allow jumping
+                if (p.Position.y > state.Height)
                 {
-                    p.Position.y = state.Height * 3;
-                    state.Particles[j] = p;
+                    p.Position.y = state.Height;
                 }
-                if (p.Position.x < radius)
+                if (isLoopingX)
                 {
-                    p.Position.x = radius;
-                    state.Particles[j] = p;
+                    if (p.Position.x < 0)
+                    {
+                        p.Position.x += state.Width;
+                        p.PreviousPosition.x += state.Width;
+                    }
+                    if (p.Position.x > state.Width)
+                    {
+                        p.Position.x -= state.Width;
+                        p.PreviousPosition.x -= state.Width;
+                    }
                 }
-                if (p.Position.x > state.Width - radius)
+                else
                 {
-                    p.Position.x = state.Width - radius;
-                    state.Particles[j] = p;
+                    if (p.Position.x < radius)
+                    {
+                        p.Position.x = radius;
+                    }
+                    if (p.Position.x > state.Width - radius)
+                    {
+                        p.Position.x = state.Width - radius;
+                    }
                 }
             }
         }
