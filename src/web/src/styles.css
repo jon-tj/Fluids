@@ -26,3 +26,8 @@ button:active {
   background-color: #0064bd;
   box-shadow: none;
 }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
