@@ -8,7 +8,8 @@ import { Solvers } from '../../services/solvers';
 })
 export class SolverSimulation implements AfterViewInit, OnDestroy {
   @Input({ required: true }) solver!: string;
-  state = '';
+  private state = '';
+  private resetStateFlag = false;
 
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
@@ -27,8 +28,17 @@ export class SolverSimulation implements AfterViewInit, OnDestroy {
     }, 1000 / 30); // 30 FPS
   }
 
+  resetState() {
+    this.state = '';
+    this.resetStateFlag = true;
+  }
+
   requestNewFrame() {
     this.solversService.requestUpdate(this.solver, this.state).then((data) => {
+      if (this.resetStateFlag) {
+        this.resetStateFlag = false;
+        return;
+      }
       this.state = data;
       // ---- CLEAR & DRAW ----
       this.ctx.fillStyle = '#fafafa';

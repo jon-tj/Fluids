@@ -8,11 +8,11 @@ export class Solvers {
   readonly metadata = signal<SolverMetadata[]>([]);
 
   constructor() {
-    this.loadMetadata();
+    this.loadMetadata(false);
   }
 
-  private loadMetadata() {
-    fetch('api/solver')
+  loadMetadata(reset = true): void {
+    fetch('api/solver?reset=' + reset)
       .then((res) => res.json())
       .then((data) => this.metadata.set(data));
   }

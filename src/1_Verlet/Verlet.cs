@@ -11,7 +11,7 @@ public class VerletSolver : IFluidSolver
         new(
             displayName: "Verlet",
             description: """
-            Solve a particle simulation with high density using chunking.
+            Solve a particle simulation with high density using chunking.\n
             Note that Chunk Size should be at least twice the particle Radius to avoid jitter.
             """,
             parameters: new()

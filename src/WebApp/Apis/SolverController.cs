@@ -11,8 +11,13 @@ public class SolverController(ILogger<SolverController> logger, SolverRegistry r
     private readonly SolverRegistry registry = registry;
     // GET: api/solver
     [HttpGet]
-    public IEnumerable<SolverMetadata> Get()
+    public IEnumerable<SolverMetadata> Get(bool? reset = false)
     {
+        if (reset == true)
+        {
+            registry.ResetSolvers();
+            logger.LogInformation("Solver registry reset requested via API.");
+        }
         return registry.All.Select(s => s.Metadata);
     }
 
@@ -20,7 +25,6 @@ public class SolverController(ILogger<SolverController> logger, SolverRegistry r
     [HttpGet("{id}")]
     public SolverMetadata? Get(string id)
     {
-        registry.ResetSolvers(); // Reset all solvers to default parameters on each GET
         return GetSolverById(id)?.Metadata;
     }
 

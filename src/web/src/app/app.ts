@@ -5,7 +5,7 @@ import { NavigationMenu } from './components/navigation-menu/navigation-menu';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SolversOverview, NavigationMenu],
+  imports: [RouterOutlet, NavigationMenu],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

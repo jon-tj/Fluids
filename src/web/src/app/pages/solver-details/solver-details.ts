@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Solvers } from '../../services/solvers';
 import { ActivatedRoute } from '@angular/router';
 import { ParameterField } from '../../components/parameter-field/parameter-field';
@@ -13,6 +13,7 @@ import { SolverSimulation } from '../../components/solver-simulation/solver-simu
 export class SolverDetails {
   private readonly solverService = inject(Solvers);
   private readonly route = inject(ActivatedRoute);
+  @ViewChild(SolverSimulation) solverSimulation!: SolverSimulation;
 
   protected readonly solver = computed(() => {
     const solverId = this.route.snapshot.paramMap.get('solver');
@@ -29,4 +30,12 @@ export class SolverDetails {
       };
     });
   });
+
+  btnResetParams(): void {
+    this.solverService.loadMetadata(true);
+  }
+
+  btnResetState(): void {
+    this.solverSimulation.resetState();
+  }
 }

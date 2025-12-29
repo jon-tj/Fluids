@@ -6,5 +6,8 @@
 <app-parameter-field [parameter]="param.data" [title]="param.key"></app-parameter-field>
 }
 
+<button (click)="btnResetParams()">Reset Parameters</button>
+<button (click)="btnResetState()">Reset State</button>
+
 <app-solver-simulation [solver]="solver()!.displayName"></app-solver-simulation>
 }
