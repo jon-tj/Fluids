@@ -31,6 +31,10 @@ export class SolverDetails {
     });
   });
 
+  protected get descriptionLines(): string[] {
+    return this.solver()?.description.split('\n') ?? [];
+  }
+
   btnResetParams(): void {
     this.solverService.loadMetadata(true);
   }

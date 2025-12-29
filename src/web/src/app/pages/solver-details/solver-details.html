@@ -1,8 +1,8 @@
 @if(solver()){
 <h1>{{ solver()!.displayName }}</h1>
-<p>{{ solver()!.description }}</p>
-
-@for(param of parameters(); track param.key){
+@for(line of descriptionLines; track line){
+<p>{{ line }}</p>
+} @for(param of parameters(); track param.key){
 <app-parameter-field [parameter]="param.data" [title]="param.key"></app-parameter-field>
 }
 
