@@ -6,27 +6,27 @@ namespace FluidSim.Solvers.Verlet;
 public class VerletSolver : IFluidSolver
 {
     public string Id => "Verlet";
-
-    public SolverMetadata Metadata =>
+    public SolverMetadata Metadata => md;
+    public SolverMetadata md =
         new(
             displayName: "Verlet",
             description: "Solve a particle simulation with high density using chunking.",
             parameters: new()
             {
-                ["Substeps"] = new DisplayParameter(3, new Interval(1, 10), ParameterDomain.Integer),
-                ["Time Step"] = new DisplayParameter(0.05f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
-                ["Radius"] = new DisplayParameter(0.25f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
-                ["Chunk Size"] = new DisplayParameter(0.25f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
+                ["Substeps"] = new DisplayParameter(5, new Interval(1, 20), ParameterDomain.Integer),
+                ["Time Step"] = new DisplayParameter(0.03f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
+                ["Radius"] = new DisplayParameter(0.2f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
+                ["Chunk Size"] = new DisplayParameter(0.4f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
                 // ["Initial Skew"] = new DisplayParameter(0.05f, new Interval(0, 1), ParameterDomain.Decimal),
             }
         );
     public FluidState Step(FluidState state)
     {
-        int substeps = (int)Metadata.Parameters["Substeps"].Value;
-        float dt = Metadata.Parameters["Time Step"].Value;
+        int substeps = (int)md.Parameters["Substeps"].Value;
+        float dt = md.Parameters["Time Step"].Value;
         dt /= substeps;
-        float radius = Metadata.Parameters["Radius"].Value;
-        float chunkSize = Metadata.Parameters["Chunk Size"].Value;
+        float radius = md.Parameters["Radius"].Value;
+        float chunkSize = md.Parameters["Chunk Size"].Value;
         Vector3 acceleration = Vector3.Gravity;
 
         void CorrectWallCollisions()
@@ -101,10 +101,8 @@ public class VerletSolver : IFluidSolver
                                     {
                                         // simple separation
                                         Vector3 correction = delta * (0.5f * (2 * radius - dist) / dist);
-                                        pi.Position += correction * 0.4f;
-                                        pj.Position -= correction * 0.4f;
-                                        pi.PreviousPosition += correction * 0.35f;
-                                        pj.PreviousPosition -= correction * 0.35f;
+                                        pi.Position += correction * 0.7f; // Dampen the correction to avoid jitter
+                                        pj.Position -= correction * 0.7f;
 
                                         state.Particles[i] = pi;
                                         state.Particles[j] = pj;

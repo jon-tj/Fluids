@@ -5,8 +5,9 @@ namespace FluidSim.WebApp.Apis;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SolverController : ControllerBase
+public class SolverController(ILogger<SolverController> logger) : ControllerBase
 {
+    private readonly ILogger<SolverController> logger = logger;
     // GET: api/solver
     [HttpGet]
     public IEnumerable<SolverMetadata> Get()
@@ -53,9 +54,15 @@ public class SolverController : ControllerBase
         if (solver is null)
             return;
 
+        logger.LogInformation("Updating parameter {ParameterName} to {Value} for solver {SolverId}", request.ParameterName, request.Value, id);
         if (solver.Metadata.Parameters.ContainsKey(request.ParameterName))
         {
             solver.Metadata.Parameters[request.ParameterName].Value = request.Value;
+
+        }
+        foreach (var param in solver.Metadata.Parameters)
+        {
+            logger.LogInformation("Parameter {ParameterName} is now {Value}", param.Key, param.Value.Value);
         }
     }
 
