@@ -5,20 +5,22 @@ namespace FluidSim.WebApp.Apis;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SolverController(ILogger<SolverController> logger) : ControllerBase
+public class SolverController(ILogger<SolverController> logger, SolverRegistry registry) : ControllerBase
 {
     private readonly ILogger<SolverController> logger = logger;
+    private readonly SolverRegistry registry = registry;
     // GET: api/solver
     [HttpGet]
     public IEnumerable<SolverMetadata> Get()
     {
-        return SolverRegistry.All.Select(s => s.Metadata);
+        return registry.All.Select(s => s.Metadata);
     }
 
     // GET api/solver/Verlet
     [HttpGet("{id}")]
     public SolverMetadata? Get(string id)
     {
+        registry.ResetSolvers(); // Reset all solvers to default parameters on each GET
         return GetSolverById(id)?.Metadata;
     }
 
@@ -54,15 +56,9 @@ public class SolverController(ILogger<SolverController> logger) : ControllerBase
         if (solver is null)
             return;
 
-        logger.LogInformation("Updating parameter {ParameterName} to {Value} for solver {SolverId}", request.ParameterName, request.Value, id);
         if (solver.Metadata.Parameters.ContainsKey(request.ParameterName))
         {
             solver.Metadata.Parameters[request.ParameterName].Value = request.Value;
-
-        }
-        foreach (var param in solver.Metadata.Parameters)
-        {
-            logger.LogInformation("Parameter {ParameterName} is now {Value}", param.Key, param.Value.Value);
         }
     }
 
@@ -79,7 +75,7 @@ public class SolverController(ILogger<SolverController> logger) : ControllerBase
 
     private IFluidSolver? GetSolverById(string id)
     {
-        return SolverRegistry.All.FirstOrDefault(s => s.Id == id);
+        return registry.All.FirstOrDefault(s => s.Id == id);
     }
 }
 

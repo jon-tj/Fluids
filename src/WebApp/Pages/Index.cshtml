@@ -9,7 +9,7 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-@foreach (var solver in SolverRegistry.All)
+@foreach (var solver in @Model.registry.All)
 {
     <div class="solver-card">
         <h3>@solver.Metadata.DisplayName</h3>

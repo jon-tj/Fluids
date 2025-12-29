@@ -7,7 +7,32 @@ public class DisplayParameter
     public float Value
     {
         get;
-        set;
+        set
+        {
+            switch (Domain)
+            {
+                case ParameterDomain.Integer:
+                    field = (int)value;
+                    if (Range is not null)
+                    {
+                        if (field < Range.Min) field = Range.Min;
+                        if (field > Range.Max) field = Range.Max;
+                    }
+                    break;
+                case ParameterDomain.Binary:
+                    var threshold = (Range.Min + Range.Max) / 2;
+                    field = value < threshold ? Range.Min : Range.Max;
+                    break;
+                default:
+                    field = value;
+                    if (Range is not null)
+                    {
+                        if (field < Range.Min) field = Range.Min;
+                        if (field > Range.Max) field = Range.Max;
+                    }
+                    break;
+            }
+        }
     }
     public Interval Range { get; set; }
     public ParameterDomain Domain { get; set; }

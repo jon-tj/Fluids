@@ -10,7 +10,10 @@ public class VerletSolver : IFluidSolver
     public SolverMetadata md =
         new(
             displayName: "Verlet",
-            description: "Solve a particle simulation with high density using chunking.",
+            description: """
+            Solve a particle simulation with high density using chunking.
+            Note that Chunk Size should be at least twice the particle Radius to avoid jitter.
+            """,
             parameters: new()
             {
                 ["Substeps"] = new DisplayParameter(5, new Interval(1, 20), ParameterDomain.Integer),
@@ -37,6 +40,11 @@ public class VerletSolver : IFluidSolver
                 if (p.Position.y < 0)
                 {
                     p.Position.y = 0f;
+                    state.Particles[j] = p;
+                }
+                if (p.Position.y > state.Height * 3)
+                {
+                    p.Position.y = state.Height * 3;
                     state.Particles[j] = p;
                 }
                 if (p.Position.x < 0)

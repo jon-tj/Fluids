@@ -1,6 +1,9 @@
+using FluidSim.WebApp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<SolverRegistry>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();   // Required for minimal APIs + controllers
