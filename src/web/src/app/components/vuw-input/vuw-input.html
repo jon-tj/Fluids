@@ -1,0 +1,4 @@
+<input type="number" [value]="parameter.value" (input)="changeValue($event)" step="0.01" />
+@if(parameter.unit.symbol){
+<span class="unit-label" title="{{ parameter.unit.name }}">{{ parameter.unit.symbol }}</span>
+}

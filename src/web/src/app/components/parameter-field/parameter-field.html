@@ -18,5 +18,5 @@
 </aside>
 
 <aside>
-  <input #slider type="number" [value]="parameter.value" (input)="changeValue($event)" />
+  <app-vuw-input [parameter]="parameter" (change)="changeValue($event)"></app-vuw-input>
 </aside>

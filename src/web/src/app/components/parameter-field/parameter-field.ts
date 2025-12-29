@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { DisplayParameter } from '../../model';
+import { VuwInput } from '../vuw-input/vuw-input';
 
 @Component({
   selector: 'app-parameter-field',
-  imports: [],
+  imports: [VuwInput],
   templateUrl: './parameter-field.html',
   styleUrl: './parameter-field.css',
 })

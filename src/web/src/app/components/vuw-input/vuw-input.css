@@ -1,0 +1,51 @@
+:host {
+  width: 4rem;
+  margin: auto;
+  height: fit-content;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  align-items: center;
+  display: flex;
+  border-radius: 1rem;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+:host(:hover) {
+  box-shadow: 0 0 5px #ccc;
+}
+
+:host(:focus-within) {
+  border: 1px solid #555;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+span.unit-label {
+  color: #aaa;
+  cursor: help;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+/* --Hide spin buttons-- */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
