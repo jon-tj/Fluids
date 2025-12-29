@@ -93,9 +93,9 @@ public class VerletSolver : IFluidSolver
             for (int j = 0; j < state.Particles.Length; j++)
             {
                 Particle p = state.Particles[j];
-                if (p.Position.y < 0)
+                if (p.Position.y < radius)
                 {
-                    p.Position.y = 0f;
+                    p.Position.y = radius;
                     state.Particles[j] = p;
                 }
                 if (p.Position.y > state.Height * 3) // Extra height to allow jumping
@@ -103,14 +103,14 @@ public class VerletSolver : IFluidSolver
                     p.Position.y = state.Height * 3;
                     state.Particles[j] = p;
                 }
-                if (p.Position.x < 0)
+                if (p.Position.x < radius)
                 {
-                    p.Position.x = 0f;
+                    p.Position.x = radius;
                     state.Particles[j] = p;
                 }
-                if (p.Position.x > state.Width)
+                if (p.Position.x > state.Width - radius)
                 {
-                    p.Position.x = state.Width;
+                    p.Position.x = state.Width - radius;
                     state.Particles[j] = p;
                 }
             }
