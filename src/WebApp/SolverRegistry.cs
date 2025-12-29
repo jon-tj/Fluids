@@ -7,6 +7,6 @@ public static class SolverRegistry
 {
     public static readonly List<IFluidSolver> All =
     [
-        new Solvers.Verlet.StableFluidsSolver(),
+        new Solvers.Verlet.VerletSolver(),
     ];
 }

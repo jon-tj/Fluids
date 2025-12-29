@@ -3,7 +3,7 @@ using FluidSim.Core.Units;
 
 namespace FluidSim.Solvers.Verlet;
 
-public class StableFluidsSolver : IFluidSolver
+public class VerletSolver : IFluidSolver
 {
     public string Id => "Verlet";
 
@@ -13,7 +13,7 @@ public class StableFluidsSolver : IFluidSolver
             description: "Solve a particle simulation with high density using chunking.",
             parameters: new()
             {
-                ["Substeps"] = new DisplayParameter(4, new Interval(1, 10), ParameterDomain.Integer),
+                ["Substeps"] = new DisplayParameter(3, new Interval(1, 10), ParameterDomain.Integer),
                 ["Time Step"] = new DisplayParameter(0.05f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
                 ["Radius"] = new DisplayParameter(0.25f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
                 ["Chunk Size"] = new DisplayParameter(0.25f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
@@ -37,23 +37,16 @@ public class StableFluidsSolver : IFluidSolver
                 if (p.Position.y < 0)
                 {
                     p.Position.y = 0f;
-                    p.Velocity.y = Math.Max(0, p.Velocity.y);
                     state.Particles[j] = p;
                 }
                 if (p.Position.x < 0)
                 {
                     p.Position.x = 0f;
-                    if (p.Velocity.x < 0)
-                        p.Velocity.x = -p.Velocity.x * 0.5f;
-                    p.PreviousPosition.x = p.Position.x * 2 - p.PreviousPosition.x;
                     state.Particles[j] = p;
                 }
                 if (p.Position.x > state.Width)
                 {
                     p.Position.x = state.Width;
-                    if (p.Velocity.x > 0)
-                        p.Velocity.x = -p.Velocity.x * 0.5f;
-                    p.PreviousPosition.x = p.Position.x * 2 - p.PreviousPosition.x;
                     state.Particles[j] = p;
                 }
             }
@@ -67,7 +60,6 @@ public class StableFluidsSolver : IFluidSolver
                 Particle p = state.Particles[j];
                 Vector3 currentPos = p.Position;
                 p.Position = currentPos + (currentPos - p.PreviousPosition) + acceleration * dt * dt;
-                p.Velocity = (p.Position - p.PreviousPosition) / dt;
                 p.PreviousPosition = currentPos;
                 state.Particles[j] = p;
             }

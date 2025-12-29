@@ -15,7 +15,7 @@ public class DisplayParameter
                     field = (int)value;
                     break;
                 case ParameterDomain.Binary:
-                    field = value > 0.5f ? Range.Min : Range.Max;
+                    field = value < Range.Max ? Range.Min : Range.Max;
                     break;
                 default:
                     field = value;

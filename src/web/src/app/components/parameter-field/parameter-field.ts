@@ -20,5 +20,16 @@ export class ParameterField {
     input.value = value.toString();
 
     this.parameter.value = value;
+
+    fetch('/api/solver/Verlet/parameters', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        parameterName: this.title,
+        value: this.parameter.value,
+      }),
+    });
   }
 }

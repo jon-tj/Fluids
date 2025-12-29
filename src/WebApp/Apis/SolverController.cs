@@ -44,6 +44,32 @@ public class SolverController : ControllerBase
         return Convert.ToBase64String(next.Serialize());
     }
 
+
+    // POST api/solver/{id}/parameters
+    [HttpPost("{id}/parameters")]
+    public void PostParameter(string id, [FromBody] UpdateParameterRequestBody request)
+    {
+        var solver = GetSolverById(id);
+        if (solver is null)
+            return;
+
+        if (solver.Metadata.Parameters.ContainsKey(request.ParameterName))
+        {
+            solver.Metadata.Parameters[request.ParameterName].Value = request.Value;
+        }
+    }
+
+    // GET api/solver/{id}/parameters
+    [HttpGet("{id}/parameters")]
+    public Dictionary<string, float> GetParameter(string id)
+    {
+        var solver = GetSolverById(id);
+        if (solver is null)
+            return new Dictionary<string, float>();
+
+        return solver.Metadata.Parameters.ToDictionary(kv => kv.Key, kv => kv.Value.Value);
+    }
+
     private IFluidSolver? GetSolverById(string id)
     {
         return SolverRegistry.All.FirstOrDefault(s => s.Id == id);
@@ -51,3 +77,5 @@ public class SolverController : ControllerBase
 }
 
 public record UpdateRequestBody(string State);
+
+public record UpdateParameterRequestBody(string ParameterName, float Value);
