@@ -32,34 +32,6 @@ public class VerletSolver : IFluidSolver
         float chunkSize = md.Parameters["Chunk Size"].Value;
         Vector3 acceleration = Vector3.Gravity;
 
-        void CorrectWallCollisions()
-        {
-            for (int j = 0; j < state.Particles.Length; j++)
-            {
-                Particle p = state.Particles[j];
-                if (p.Position.y < 0)
-                {
-                    p.Position.y = 0f;
-                    state.Particles[j] = p;
-                }
-                if (p.Position.y > state.Height * 3)
-                {
-                    p.Position.y = state.Height * 3;
-                    state.Particles[j] = p;
-                }
-                if (p.Position.x < 0)
-                {
-                    p.Position.x = 0f;
-                    state.Particles[j] = p;
-                }
-                if (p.Position.x > state.Width)
-                {
-                    p.Position.x = state.Width;
-                    state.Particles[j] = p;
-                }
-            }
-        }
-
         for (int step = 0; step < substeps; step++)
         {
             // --- Verlet integration ---
@@ -74,8 +46,6 @@ public class VerletSolver : IFluidSolver
 
             // --- build chunks for collision detection ---
             var chunks = BuildChunks(state.Particles, chunkSize);
-
-            CorrectWallCollisions();
 
             // --- collision handling ---
             foreach (var kvp in chunks)
@@ -119,7 +89,31 @@ public class VerletSolver : IFluidSolver
                         }
             }
 
-            CorrectWallCollisions();
+            // --- boundary conditions ---
+            for (int j = 0; j < state.Particles.Length; j++)
+            {
+                Particle p = state.Particles[j];
+                if (p.Position.y < 0)
+                {
+                    p.Position.y = 0f;
+                    state.Particles[j] = p;
+                }
+                if (p.Position.y > state.Height * 3) // Extra height to allow jumping
+                {
+                    p.Position.y = state.Height * 3;
+                    state.Particles[j] = p;
+                }
+                if (p.Position.x < 0)
+                {
+                    p.Position.x = 0f;
+                    state.Particles[j] = p;
+                }
+                if (p.Position.x > state.Width)
+                {
+                    p.Position.x = state.Width;
+                    state.Particles[j] = p;
+                }
+            }
         }
 
         return state;
