@@ -4,11 +4,13 @@ namespace FluidSim.Core;
 
 public class DisplayParameter
 {
+    private float OldValue;
     public float Value
     {
         get;
         set
         {
+            OldValue = Value;
             switch (Domain)
             {
                 case ParameterDomain.Integer:
@@ -33,7 +35,20 @@ public class DisplayParameter
                     break;
             }
         }
+
     }
+
+    public ValueChangedEventArgs? ValueChanged()
+    {
+        if (OldValue != Value)
+        {
+            var e = new ValueChangedEventArgs(OldValue, Value);
+            OldValue = Value;
+            return e;
+        }
+        return null;
+    }
+
     public Interval Range { get; set; }
     public ParameterDomain Domain { get; set; }
     public Unit Unit { get; set; }

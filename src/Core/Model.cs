@@ -1,8 +1,8 @@
 namespace FluidSim.Core;
 
-public class FluidState(Particle[] Particles, float Width, float Height, float Depth = 1)
+public class FluidState(List<Particle> Particles, float Width, float Height, float Depth = 1)
 {
-    public Particle[] Particles { get; } = Particles;
+    public List<Particle> Particles { get; } = Particles;
     public float Width { get; } = Width;
     public float Height { get; } = Height;
     public float Depth { get; } = Depth;
@@ -14,7 +14,7 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
         float height = br.ReadSingle();
         float depth = br.ReadSingle();
         int numParticles = br.ReadInt32();
-        Particle[] particles = new Particle[numParticles];
+        List<Particle> particles = new List<Particle>();
         for (int i = 0; i < numParticles; i++)
         {
             float mass = br.ReadSingle();
@@ -27,7 +27,7 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
             float vx = br.ReadSingle();
             float vy = br.ReadSingle();
             float vz = br.ReadSingle();
-            particles[i] = new Particle(mass, new Vector3(px, py, pz), new Vector3(px1, py1, pz1), new Vector3(vx, vy, vz));
+            particles.Add(new Particle(mass, new Vector3(px, py, pz), new Vector3(px1, py1, pz1), new Vector3(vx, vy, vz)));
         }
         return new FluidState(particles, width, height, depth);
     }
@@ -39,7 +39,7 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
         bw.Write(Width);
         bw.Write(Height);
         bw.Write(Depth);
-        bw.Write(Particles.Length);
+        bw.Write(Particles.Count);
         foreach (var p in Particles)
         {
             bw.Write(p.Mass);
@@ -58,7 +58,7 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
 
     public static FluidState UniformRandom(int numParticles, float mass, float width, float height, float depth, float padding = 0.5f)
     {
-        Particle[] particles = new Particle[numParticles];
+        List<Particle> particles = new List<Particle>();
         Random rand = new Random();
         float paddingX = width > padding * 2 ? padding : width / 2;
         float paddingY = height > padding * 2 ? padding : height / 2;
@@ -70,7 +70,7 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
                 paddingY + (float)(rand.NextDouble() * (height - 2 * paddingY)),
                 paddingZ + (float)(rand.NextDouble() * (depth - 2 * paddingZ))
             );
-            particles[i] = new Particle(mass, pos0, pos0, Vector3.Zero);
+            particles.Add(new Particle(mass, pos0, pos0, Vector3.Zero));
         }
         return new FluidState(particles, width, height, depth);
     }
@@ -82,6 +82,11 @@ public class Particle(float Mass, Vector3 Position, Vector3 PreviousPosition, Ve
     public Vector3 Position { get; set; } = Position;
     public Vector3 PreviousPosition { get; set; } = PreviousPosition;
     public Vector3 Velocity { get; set; } = Velocity;
+
+    public Particle Clone()
+    {
+        return new Particle(Mass, Position.Clone(), PreviousPosition.Clone(), Velocity.Clone());
+    }
 }
 
 public class SimulationEnvironment
@@ -119,6 +124,11 @@ public class Vector3
         return new Vector3(x / mag, y / mag, z / mag);
     }
 
+    public Vector3 Clone()
+    {
+        return new Vector3(x, y, z);
+    }
+
     public static Vector3 operator +(Vector3 a, Vector3 b)
     {
         return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
@@ -151,3 +161,5 @@ public class Vector3
     public static Vector3 Left => new Vector3(-1, 0, 0);
     public static Vector3 Back => new Vector3(0, 0, -1);
 }
+
+public record ValueChangedEventArgs(float OldValue, float NewValue);

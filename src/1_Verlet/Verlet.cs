@@ -17,6 +17,7 @@ public class VerletSolver : IFluidSolver
             parameters: new()
             {
                 ["Substeps"] = new DisplayParameter(5, new Interval(1, 20), ParameterDomain.Integer),
+                ["Particles"] = new DisplayParameter(300, new Interval(1, 2000), ParameterDomain.Integer),
                 ["Time Step"] = new DisplayParameter(0.033f, Intervals.Unit, ParameterDomain.Decimal, Units.Second),
                 ["Radius"] = new DisplayParameter(0.2f, Intervals.Unit, ParameterDomain.Decimal, Units.Meter),
                 ["Chunk Size"] = new DisplayParameter(0.4f, new Interval(0, 1), ParameterDomain.Decimal, Units.Meter),
@@ -33,6 +34,32 @@ public class VerletSolver : IFluidSolver
 
     public FluidState Step(FluidState state)
     {
+        if (md.Parameters["Particles"].ValueChanged() is ValueChangedEventArgs particleChangedEvent)
+        {
+            if (particleChangedEvent.NewValue > particleChangedEvent.OldValue)
+            {
+                // add particles
+                int toAdd = (int)(particleChangedEvent.NewValue - particleChangedEvent.OldValue);
+                Random rand = new Random();
+                for (int i = 0; i < toAdd; i++)
+                {
+                    Particle p = state.Particles[0].Clone();
+                    p.Position = new Vector3(
+                        (float)(rand.NextDouble() * state.Width),
+                        (float)(rand.NextDouble() * state.Height),
+                        (float)(rand.NextDouble() * state.Depth)
+                    );
+                    p.PreviousPosition = p.Position;
+                    state.Particles.Add(p);
+                }
+            }
+            else
+            {
+                // remove particles
+                int toRemove = (int)(particleChangedEvent.OldValue - particleChangedEvent.NewValue);
+                state.Particles.RemoveRange(state.Particles.Count - toRemove, toRemove);
+            }
+        }
         int substeps = (int)md.Parameters["Substeps"].Value;
         float dt = md.Parameters["Time Step"].Value;
         dt /= substeps;
@@ -43,7 +70,7 @@ public class VerletSolver : IFluidSolver
         for (int step = 0; step < substeps; step++)
         {
             // --- Verlet integration ---
-            for (int j = 0; j < state.Particles.Length; j++)
+            for (int j = 0; j < state.Particles.Count; j++)
             {
                 Particle p = state.Particles[j];
                 Vector3 currentPos = p.Position;
@@ -100,7 +127,7 @@ public class VerletSolver : IFluidSolver
             }
 
             // --- boundary conditions ---
-            for (int j = 0; j < state.Particles.Length; j++)
+            for (int j = 0; j < state.Particles.Count; j++)
             {
                 Particle p = state.Particles[j];
                 if (p.Position.y < radius)
@@ -142,11 +169,11 @@ public class VerletSolver : IFluidSolver
     }
 
 
-    private Dictionary<(int, int, int), List<int>> BuildChunks(Particle[] particles, float chunkSize)
+    private Dictionary<(int, int, int), List<int>> BuildChunks(List<Particle> particles, float chunkSize)
     {
         var chunks = new Dictionary<(int, int, int), List<int>>();
 
-        for (int i = 0; i < particles.Length; i++)
+        for (int i = 0; i < particles.Count; i++)
         {
             Particle p = particles[i];
             var key = (
