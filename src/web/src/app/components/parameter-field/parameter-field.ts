@@ -13,7 +13,12 @@ export class ParameterField {
   @Input({ required: true }) title!: string;
 
   changeValue(e: Event) {
+    if ((e as InputEvent).inputType) return; // ignore input events
     const input = e.target as HTMLInputElement;
+    console.log('changeValue called', e);
+    if (input.value.endsWith('.')) {
+      return;
+    }
     let value = parseFloat(input.value);
     if (value > this.parameter.range.max) value = this.parameter.range.max;
     if (value < this.parameter.range.min) value = this.parameter.range.min;
