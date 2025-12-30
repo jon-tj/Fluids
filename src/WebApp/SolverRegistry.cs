@@ -4,17 +4,14 @@ namespace FluidSim.WebApp;
 
 public class SolverRegistry
 {
-    public List<IFluidSolver> All;
-    public SolverRegistry()
-    {
-        All = ResetSolvers();
-    }
-
-    public List<IFluidSolver> ResetSolvers()
-    {
-        All = [
+    public List<IFluidSolver> All = [
             new Solvers.Verlet.VerletSolver(),
         ];
-        return All;
+
+    public void ResetSolvers()
+    {
+        foreach (var solver in All)
+            foreach (var param in solver.Metadata.Parameters.Values)
+                param.Reset();
     }
 }

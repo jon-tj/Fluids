@@ -5,6 +5,7 @@ namespace FluidSim.Core;
 public class DisplayParameter
 {
     private float OldValue;
+    private float InitialValue;
     public float Value
     {
         get;
@@ -38,6 +39,11 @@ public class DisplayParameter
 
     }
 
+    public void Reset()
+    {
+        Value = InitialValue;
+    }
+
     public ValueChangedEventArgs? ValueChanged()
     {
         if (OldValue != Value)
@@ -58,6 +64,7 @@ public class DisplayParameter
     {
         Domain = domain;
         Value = value;
+        InitialValue = value;
         Range = range;
         Unit = unit ?? Units.Units.None;
         ReinitializeOnChange = reinitializeOnChange;
