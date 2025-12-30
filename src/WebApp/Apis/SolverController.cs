@@ -39,7 +39,7 @@ public class SolverController(ILogger<SolverController> logger, SolverRegistry r
         FluidState fs;
         if (string.IsNullOrEmpty(request.State))
         {
-            fs = FluidState.UniformRandom(300, 1.0f, 10, 10, 0);
+            fs = FluidState.UniformRandom(10, 1.0f, 10, 10, 0);
         }
         else
         {

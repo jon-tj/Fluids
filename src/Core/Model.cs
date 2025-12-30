@@ -56,16 +56,19 @@ public class FluidState(Particle[] Particles, float Width, float Height, float D
         return ms.ToArray();
     }
 
-    public static FluidState UniformRandom(int numParticles, float mass, int width, int height, int depth)
+    public static FluidState UniformRandom(int numParticles, float mass, float width, float height, float depth, float padding = 0.5f)
     {
         Particle[] particles = new Particle[numParticles];
         Random rand = new Random();
+        float paddingX = width > padding * 2 ? padding : width / 2;
+        float paddingY = height > padding * 2 ? padding : height / 2;
+        float paddingZ = depth > padding * 2 ? padding : depth / 2;
         for (int i = 0; i < numParticles; i++)
         {
             Vector3 pos0 = new Vector3(
-                (float)(rand.NextDouble() * width),
-                (float)(rand.NextDouble() * height),
-                (float)(rand.NextDouble() * depth)
+                paddingX + (float)(rand.NextDouble() * (width - 2 * paddingX)),
+                paddingY + (float)(rand.NextDouble() * (height - 2 * paddingY)),
+                paddingZ + (float)(rand.NextDouble() * (depth - 2 * paddingZ))
             );
             particles[i] = new Particle(mass, pos0, pos0, Vector3.Zero);
         }
