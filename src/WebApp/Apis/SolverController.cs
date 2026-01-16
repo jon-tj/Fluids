@@ -5,20 +5,20 @@ namespace FluidSim.WebApp.Apis;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SolverController(ILogger<SolverController> logger, SolverRegistry registry) : ControllerBase
+public class SolverController(ILogger<SolverController> logger, SolverRegistry solvers) : ControllerBase
 {
     private readonly ILogger<SolverController> logger = logger;
-    private readonly SolverRegistry registry = registry;
+    private readonly SolverRegistry solvers = solvers;
     // GET: api/solver
     [HttpGet]
     public IEnumerable<SolverMetadata> Get(bool? reset = false)
     {
         if (reset == true)
         {
-            registry.ResetSolvers();
+            solvers.ResetSolvers();
             logger.LogInformation("Solver registry reset requested via API.");
         }
-        return registry.All.Select(s => s.Metadata);
+        return solvers.All.Select(s => s.Metadata);
     }
 
     // GET api/solver/Verlet
@@ -79,7 +79,7 @@ public class SolverController(ILogger<SolverController> logger, SolverRegistry r
 
     private IFluidSolver? GetSolverById(string id)
     {
-        return registry.All.FirstOrDefault(s => s.Id == id);
+        return solvers.All.FirstOrDefault(s => s.Id == id);
     }
 }
 

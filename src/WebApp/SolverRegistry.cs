@@ -1,4 +1,5 @@
 using FluidSim.Core;
+using FluidSim.Core.Gauges;
 
 namespace FluidSim.WebApp;
 
@@ -14,4 +15,11 @@ public class SolverRegistry
             foreach (var param in solver.Metadata.Parameters.Values)
                 param.Reset();
     }
+}
+
+public class GaugeRegistry
+{
+    public List<IParticleGauge> All = [
+        new VelocityGauge(),
+    ];
 }

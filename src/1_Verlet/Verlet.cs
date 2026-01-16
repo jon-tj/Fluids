@@ -74,10 +74,16 @@ public class VerletSolver : IFluidSolver
             {
                 Particle p = state.Particles[j];
                 Vector3 currentPos = p.Position;
+                float estimatedSpeed = (p.Position.x - p.PreviousPosition.x) / dt;
                 p.Position = currentPos + (currentPos - p.PreviousPosition) + acceleration * dt * dt;
                 p.PreviousPosition = currentPos;
-                p.Position.x += md.Parameters["Tunnel Speed"].Value * dt;
-                p.PreviousPosition.x += md.Parameters["Tunnel Speed"].Value * dt;
+                if (false)
+                {
+
+                    p.Position.x += md.Parameters["Tunnel Speed"].Value * dt;
+                    p.PreviousPosition.x += md.Parameters["Tunnel Speed"].Value * dt;
+
+                }
                 state.Particles[j] = p;
             }
 
@@ -140,15 +146,19 @@ public class VerletSolver : IFluidSolver
                 }
                 if (isLoopingX)
                 {
-                    if (p.Position.x < 0)
+                    if ((p.Position.x < 0) && (md.Parameters["Tunnel Speed"].Value < 0))
                     {
-                        p.Position.x += state.Width;
-                        p.PreviousPosition.x += state.Width;
+                        p.Position.x += state.Width + radius * 2;
+                        p.PreviousPosition.x += state.Width + radius * 2;
+                        if (p.PreviousPosition.x < p.Position.x)
+                            p.PreviousPosition.x = p.Position.x;
                     }
-                    if (p.Position.x > state.Width)
+                    if ((p.Position.x > state.Width) && (md.Parameters["Tunnel Speed"].Value > 0))
                     {
-                        p.Position.x -= state.Width;
-                        p.PreviousPosition.x -= state.Width;
+                        p.Position.x -= state.Width + radius * 2;
+                        p.PreviousPosition.x -= state.Width + radius * 2;
+                        if (p.PreviousPosition.x > p.Position.x)
+                            p.PreviousPosition.x = p.Position.x;
                     }
                 }
                 else
