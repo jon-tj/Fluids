@@ -27,3 +27,13 @@ export interface DisplayParameter extends ValueWithUnit {
   domain: number;
   reinitializeOnChange: boolean;
 }
+
+export interface GaugeResult {
+  name: string;
+  value: number;
+}
+
+export interface GaugeMetadata {
+  id: string;
+  description: string;
+}

@@ -17,17 +17,18 @@ public class GaugeController(ILogger<GaugeController> logger, GaugeRegistry gaug
         return gauges.All.Select(s => s.Metadata);
     }
 
-    // GET api/gauge/Velocity
-    [HttpPost("{id}")]
-    public ParticleGaugeResult[] Gauge(string id, [FromBody] UpdateRequestBody request)
+    // GET api/gauge/
+    [HttpPost]
+    public IEnumerable<GaugeResponse> Gauge([FromBody] GaugeRequestBody request)
     {
-        var gauge = gauges.All.FirstOrDefault(s => s.Metadata.Id == id);
+        var gauge = gauges.All.Where(s => request.GaugeIds.Contains(s.Metadata.Id));
 
         var bytes = Convert.FromBase64String(request.State ?? "");
         var fs = FluidState.Deserialize(bytes);
 
-        return gauge?.Gauge(fs) ?? [];
+        return gauge.Select(g => new GaugeResponse(g.Metadata.Id, g.Gauge(fs)));
     }
 }
 
-public record GaugeRequestBody(string State);
+public record GaugeRequestBody(string State, string[] GaugeIds);
+public record GaugeResponse(string GaugeId, ParticleGaugeResult[] Result);

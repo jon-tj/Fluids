@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, inject, Input, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { Solvers } from '../../services/solvers';
 
 @Component({
@@ -8,6 +16,7 @@ import { Solvers } from '../../services/solvers';
 })
 export class SolverSimulation implements AfterViewInit, OnDestroy {
   @Input({ required: true }) solver!: string;
+  @Output() stateChange = new EventEmitter<string>();
   private state = '';
   private resetStateFlag = false;
 
@@ -30,6 +39,7 @@ export class SolverSimulation implements AfterViewInit, OnDestroy {
 
   resetState() {
     this.state = '';
+    this.stateChange.emit(this.state);
     this.resetStateFlag = true;
   }
 
@@ -40,6 +50,7 @@ export class SolverSimulation implements AfterViewInit, OnDestroy {
         return;
       }
       this.state = data;
+      this.stateChange.emit(this.state);
       // ---- CLEAR & DRAW ----
       this.ctx.fillStyle = '#fafafa';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);

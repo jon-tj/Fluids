@@ -6,8 +6,13 @@
 <app-parameter-field [parameter]="param.data" [title]="param.key"></app-parameter-field>
 }
 
-<app-solver-simulation [solver]="solver()!.displayName"></app-solver-simulation>
+<app-solver-simulation
+  [solver]="solver()!.displayName"
+  (stateChange)="this.state.set($event)"
+></app-solver-simulation>
 <br />
 <button (click)="btnResetParams()">Reset Parameters</button>
 <button (click)="btnResetState()">Reset State</button>
 }
+
+<app-particle-gauges-list [state]="state()"></app-particle-gauges-list>

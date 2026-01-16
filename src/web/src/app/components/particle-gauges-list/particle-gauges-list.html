@@ -1,0 +1,19 @@
+@for(gauge of allGauges(); track gauge.id){
+<div class="gauge-box">
+  <section class="input-field">
+    <h4>{{ gauge.id }}</h4>
+    <input
+      type="checkbox"
+      name="enabled"
+      (change)="onToggleGauge($event.target.checked, gauge.id)"
+    />
+  </section>
+  <p>{{ gauge.description }}</p>
+  @for(result of gaugeResult()[gauge.id]??[]; track result.name){
+  <div class="result-box">
+    <span>{{ result.name }}</span>
+    <span>{{ result.value.toFixed(7) }}</span>
+  </div>
+  }
+</div>
+}

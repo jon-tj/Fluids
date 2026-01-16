@@ -1,18 +1,20 @@
-import { Component, computed, inject, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { Solvers } from '../../services/solvers';
 import { ActivatedRoute } from '@angular/router';
 import { ParameterField } from '../../components/parameter-field/parameter-field';
 import { SolverSimulation } from '../../components/solver-simulation/solver-simulation';
+import { ParticleGaugesList } from '../../components/particle-gauges-list/particle-gauges-list';
 
 @Component({
   selector: 'app-solver-details',
-  imports: [ParameterField, SolverSimulation],
+  imports: [ParameterField, SolverSimulation, ParticleGaugesList],
   templateUrl: './solver-details.html',
   styleUrl: './solver-details.css',
 })
 export class SolverDetails {
   private readonly solverService = inject(Solvers);
   private readonly route = inject(ActivatedRoute);
+  protected state = signal('');
   @ViewChild(SolverSimulation) solverSimulation!: SolverSimulation;
 
   protected readonly solver = computed(() => {
