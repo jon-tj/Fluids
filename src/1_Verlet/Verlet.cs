@@ -81,7 +81,7 @@ public class VerletSolver : IFluidSolver
                 {
 
                     p.Position.x += md.Parameters["Tunnel Speed"].Value * dt;
-                    p.PreviousPosition.x += md.Parameters["Tunnel Speed"].Value * dt;
+                    // p.PreviousPosition.x += md.Parameters["Tunnel Speed"].Value * dt;
 
                 }
                 state.Particles[j] = p;
