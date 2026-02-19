@@ -14,6 +14,7 @@ public class GridFlowSolver : IFluidSolver
     public SolverMetadata Metadata => md;
     public SolverMetadata md =
         new(
+            id: "GridFlow",
             displayName: "Grid Flow (Eulerian)",
             description: """
             Eulerian grid-based fluid solver using Jos Stam's stable fluids method.

@@ -9,6 +9,7 @@ public class VerletSolver : IFluidSolver
     public SolverMetadata Metadata => md;
     public SolverMetadata md =
         new(
+            id: "Verlet",
             displayName: "Verlet",
             description: """
             Solve a particle simulation with high density using chunking.

@@ -1,4 +1,5 @@
 export interface SolverMetadata {
+  id: string;
   displayName: string;
   description: string;
   parameters: { [key: string]: DisplayParameter };

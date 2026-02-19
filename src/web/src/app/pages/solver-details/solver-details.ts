@@ -20,7 +20,7 @@ export class SolverDetails {
   protected readonly solver = computed(() => {
     const solverId = this.route.snapshot.paramMap.get('solver');
     if (!solverId) return null;
-    return this.solverService.metadata().find((s) => s.displayName == solverId) ?? null;
+    return this.solverService.metadata().find((s) => s.id === solverId) ?? null;
   });
 
   protected readonly parameters = computed(() => {

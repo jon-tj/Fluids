@@ -1,7 +1,7 @@
 <h1>Solvers</h1>
 
-@for(solver of solvers(); track solver.displayName){
-<a [routerLink]="'/solvers/' + solver.displayName">
+@for(solver of solvers(); track solver.id){
+<a [routerLink]="'/solvers/' + solver.id">
   <button>
     {{ solver.displayName }}
   </button></a

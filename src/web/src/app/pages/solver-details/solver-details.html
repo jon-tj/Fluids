@@ -11,7 +11,7 @@
     </aside>
     <aside>
       <app-solver-simulation
-        [solver]="solver()!.displayName"
+        [solver]="solver()!.id"
         (stateChange)="this.state.set($event)"
       ></app-solver-simulation>
       <section class="handles">

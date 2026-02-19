@@ -13,6 +13,7 @@ public class DensityFieldSolver : IFluidSolver
     public SolverMetadata Metadata => md;
     public SolverMetadata md =
         new(
+            id: "DensityField",
             displayName: "Density Field (SPH)",
             description: """
             Smoothed Particle Hydrodynamics solver that estimates local density
