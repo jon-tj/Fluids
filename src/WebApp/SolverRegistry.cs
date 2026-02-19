@@ -7,6 +7,8 @@ public class SolverRegistry
 {
     public List<IFluidSolver> All = [
             new Solvers.Verlet.VerletSolver(),
+            new Solvers.DensityField.DensityFieldSolver(),
+            new Solvers.GridFlow.GridFlowSolver(),
         ];
 
     public void ResetSolvers()

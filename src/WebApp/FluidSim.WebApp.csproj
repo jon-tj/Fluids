@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\1_Verlet\Verlet.csproj" />
+    <ProjectReference Include="..\2_DensityField\DensityField.csproj" />
+    <ProjectReference Include="..\3_GridFlow\GridFlow.csproj" />
     <ProjectReference Include="..\Core\FluidSim.Core.csproj" />
   </ItemGroup>
 
